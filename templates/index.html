@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Guidance Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chatbot-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .roadmap-panel {
+            width: 400px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .roadmap-panel.active {
+            display: block;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .message.bot .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-content {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-bottom-right-radius: 5px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .career-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .career-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .career-details {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .roadmap-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .roadmap-node:hover {
+            transform: translateX(5px);
+        }
+
+        .roadmap-node::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .roadmap-line {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #667eea;
+        }
+
+        .roadmap-container {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .toggle-roadmap {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .roadmap-panel {
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <div class="header">
+            <h1>🚀 Career Guidance Bot</h1>
+            <p>Discover your perfect career path based on your interests!</p>
+        </div>
+        
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="avatar bot-avatar">🤖</div>
+                    <div class="message-content">
+                        Hello! I'm your Career Guidance Assistant. I can help you discover careers based on your interests, provide detailed career information, and create personalized roadmaps. What are you passionate about?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="roadmap-panel" id="roadmapPanel">
+                <h3>Career Roadmap</h3>
+                <div id="roadmapContent"></div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-container">
+                <input type="text" class="input-field" id="userInput" placeholder="Tell me about your interests (e.g., technology, art, helping people)...">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+            
+            <div class="quick-buttons">
+                <button class="quick-btn" onclick="quickMessage('Technology and Programming')">💻 Technology</button>
+                <button class="quick-btn" onclick="quickMessage('Healthcare and Medicine')">🏥 Healthcare</button>
+                <button class="quick-btn" onclick="quickMessage('Creative Arts and Design')">🎨 Creative Arts</button>
+                <button class="quick-btn" onclick="quickMessage('Business and Finance')">💼 Business</button>
+                <button class="quick-btn" onclick="quickMessage('Education and Teaching')">📚 Education</button>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <span>Bot is typing</span>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <script>
+        // Career database with detailed information
+        const careerDatabase = {
+            'technology': [
+                {
+                    title: 'Software Developer',
+                    description: 'Design, develop, and maintain software applications and systems.',
+                    skills: ['Programming Languages (Python, Java, JavaScript)', 'Problem Solving', 'Software Architecture', 'Database Management'],
+                    salary: '$70,000 - $150,000+',
+                    growth: 'High (22% growth expected)',
+                    roadmap: [
+                        'Learn programming fundamentals (6 months)',
+                        'Master a programming language (3-6 months)',
+                        'Build personal projects portfolio (3 months)',
+                        'Learn version control (Git) (1 month)',
+                        'Practice data structures & algorithms (3 months)',
+                        'Apply for entry-level positions',
+                        'Gain 2-3 years experience',
+                        'Specialize in specific domain (Web, Mobile, AI)',
+                        'Consider senior developer roles',
+                        'Explore leadership or architect positions'
+                    ]
+                },
+                {
+                    title: 'Data Scientist',
+                    description: 'Analyze complex data to help organizations make informed decisions.',
+                    skills: ['Python/R Programming', 'Statistics', 'Machine Learning', 'Data Visualization'],
+                    salary: '$80,000 - $160,000+',
+                    growth: 'Very High (35% growth expected)',
+                    roadmap: [
+                        'Learn mathematics and statistics (3 months)',
+                        'Master Python/R programming (4 months)',
+                        'Study machine learning algorithms (6 months)',
+                        'Learn data visualization tools (2 months)',
+                        'Work on real-world projects (3 months)',
+                        'Build a portfolio on GitHub',
+                        'Apply for junior data analyst roles',
+                        'Gain experience with big data tools',
+                        'Develop domain expertise',
+                        'Advance to senior data scientist'
+                    ]
+                },
+                {
+                    title: 'Cybersecurity Specialist',
+                    description: 'Protect organizations from digital threats and cyber attacks.',
+                    skills: ['Network Security', 'Ethical Hacking', 'Risk Assessment', 'Security Frameworks'],
+                    salary: '$75,000 - $140,000+',
+                    growth: 'Very High (33% growth expected)',
+                    roadmap: [
+                        'Learn networking fundamentals (2 months)',
+                        'Study cybersecurity principles (3 months)',
+                        'Get CompTIA Security+ certification (2 months)',
+                        'Practice ethical hacking (4 months)',
+                        'Learn security tools and frameworks (3 months)',
+                        'Gain hands-on experience through labs',
+                        'Apply for entry-level security roles',
+                        'Pursue advanced certifications (CISSP, CEH)',
+                        'Specialize in specific security domain',
+                        'Consider security architect roles'
+                    ]
+                }
+            ],
+            'healthcare': [
+                {
+                    title: 'Registered Nurse',
+                    description: 'Provide patient care and support in various healthcare settings.',
+                    skills: ['Patient Care', 'Medical Knowledge', 'Communication', 'Critical Thinking'],
+                    salary: '$60,000 - $90,000+',
+                    growth: 'High (15% growth expected)',
+                    roadmap: [
+                        'Complete high school with strong science grades',
+                        'Enroll in accredited nursing program (2-4 years)',
+                        'Complete clinical rotations',
+                        'Pass NCLEX-RN licensing exam',
+                        'Gain experience in preferred specialty',
+                        'Consider BSN if not already obtained',
+                        'Pursue specialty certifications',
+                        'Advance to charge nurse or manager roles',
+                        'Consider advanced practice nursing (MSN)',
+                        'Explore nurse practitioner or educator roles'
+                    ]
+                },
+                {
+                    title: 'Physical Therapist',
+                    description: 'Help patients recover from injuries and improve mobility.',
+                    skills: ['Anatomy Knowledge', 'Rehabilitation Techniques', 'Patient Assessment', 'Empathy'],
+                    salary: '$75,000 - $95,000+',
+                    growth: 'Very High (28% growth expected)',
+                    roadmap: [
+                        'Complete bachelor\'s degree with prerequisites',
+                        'Gain healthcare experience through volunteering',
+                        'Apply to DPT (Doctor of Physical Therapy) programs',
+                        'Complete 3-year DPT program',
+                        'Pass National Physical Therapy Examination',
+                        'Complete state licensing requirements',
+                        'Gain clinical experience',
+                        'Consider specialization certifications',
+                        'Explore private practice opportunities',
+                        'Consider teaching or research roles'
+                    ]
+                }
+            ],
+            'creative': [
+                {
+                    title: 'UX/UI Designer',
+                    description: 'Design user-friendly interfaces and experiences for digital products.',
+                    skills: ['Design Software', 'User Research', 'Prototyping', 'Visual Design'],
+                    salary: '$65,000 - $120,000+',
+                    growth: 'High (13% growth expected)',
+                    roadmap: [
+                        'Learn design principles and theory (2 months)',
+                        'Master design tools (Figma, Adobe Creative Suite) (3 months)',
+                        'Study user experience research methods (2 months)',
+                        'Create portfolio projects (4 months)',
+                        'Learn prototyping and wireframing (2 months)',
+                        'Build comprehensive portfolio',
+                        'Apply for junior UX/UI positions',
+                        'Gain experience in user testing',
+                        'Develop specialization (mobile, web, etc.)',
+                        'Advance to senior designer or design lead'
+                    ]
+                },
+                {
+                    title: 'Digital Marketing Specialist',
+                    description: 'Create and execute digital marketing campaigns across various platforms.',
+                    skills: ['Content Creation', 'Social Media Marketing', 'SEO/SEM', 'Analytics'],
+                    salary: '$45,000 - $80,000+',
+                    growth: 'High (19% growth expected)',
+                    roadmap: [
+                        'Learn digital marketing fundamentals (2 months)',
+                        'Master social media platforms (1 month)',
+                        'Study SEO and content marketing (3 months)',
+                        'Learn Google Analytics and Ads (2 months)',
+                        'Create personal brand and portfolio (2 months)',
+                        'Gain experience through internships or freelancing',
+                        'Apply for entry-level marketing roles',
+                        'Develop expertise in specific channels',
+                        'Pursue advanced certifications',
+                        'Consider marketing manager positions'
+                    ]
+                }
+            ],
+            'business': [
+                {
+                    title: 'Business Analyst',
+                    description: 'Analyze business processes and recommend improvements.',
+                    skills: ['Data Analysis', 'Process Improvement', 'Requirements Gathering', 'Communication'],
+                    salary: '$60,000 - $100,000+',
+                    growth: 'High (14% growth expected)',
+                    roadmap: [
+                        'Develop analytical and problem-solving skills',
+                        'Learn business analysis fundamentals (2 months)',
+                        'Master Excel and data analysis tools (2 months)',
+                        'Study process mapping and improvement (2 months)',
+                        'Learn requirements gathering techniques (1 month)',
+                        'Build portfolio with case studies',
+                        'Apply for junior analyst positions',
+                        'Gain experience in specific industry',
+                        'Pursue BA certifications (CBAP, CCBA)',
+                        'Advance to senior analyst or consultant'
+                    ]
+                },
+                {
+                    title: 'Project Manager',
+                    description: 'Plan, execute, and oversee projects from start to finish.',
+                    skills: ['Project Planning', 'Leadership', 'Risk Management', 'Communication'],
+                    salary: '$70,000 - $120,000+',
+                    growth: 'High (11% growth expected)',
+                    roadmap: [
+                        'Develop leadership and communication skills',
+                        'Learn project management methodologies (3 months)',
+                        'Master PM tools (Microsoft Project, Jira) (2 months)',
+                        'Gain experience leading small projects',
+                        'Pursue PMP or other PM certifications (3 months)',
+                        'Apply for junior PM positions',
+                        'Build track record of successful projects',
+                        'Develop expertise in specific industry',
+                        'Consider senior PM or program manager roles',
+                        'Explore PMO or consulting opportunities'
+                    ]
+                }
+            ],
+            'education': [
+                {
+                    title: 'Elementary School Teacher',
+                    description: 'Teach and nurture young students in foundational subjects.',
+                    skills: ['Curriculum Development', 'Classroom Management', 'Child Psychology', 'Patience'],
+                    salary: '$45,000 - $70,000+',
+                    growth: 'Moderate (8% growth expected)',
+                    roadmap: [
+                        'Complete bachelor\'s degree in education or subject area',
+                        'Complete teacher preparation program',
+                        'Complete student teaching experience',
+                        'Pass state teaching licensure exams',
+                        'Apply for teaching positions',
+                        'Gain classroom experience',
+                        'Pursue continuing education requirements',
+                        'Consider master\'s degree in education',
+                        'Explore leadership roles (department head)',
+                        'Consider administrative positions'
+                    ]
+                }
+            ]
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                processUserMessage(message);
+            }, 1500);
+        }
+
+        function quickMessage(interest) {
+            document.getElementById('userInput').value = interest;
+            sendMessage();
+        }
+
+        function addMessage(content, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${sender}-avatar`;
+            avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function processUserMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            let responses = [];
+            let foundCareers = [];
+
+            // Check for interests and find matching careers
+            Object.keys(careerDatabase).forEach(category => {
+                if (lowerMessage.includes(category) || 
+                    (category === 'creative' && (lowerMessage.includes('art') || lowerMessage.includes('design') || lowerMessage.includes('creative'))) ||
+                    (category === 'technology' && (lowerMessage.includes('tech') || lowerMessage.includes('programming') || lowerMessage.includes('computer'))) ||
+                    (category === 'healthcare' && (lowerMessage.includes('health') || lowerMessage.includes('medical') || lowerMessage.includes('helping people'))) ||
+                    (category === 'business' && (lowerMessage.includes('finance') || lowerMessage.includes('management') || lowerMessage.includes('entrepreneur'))) ||
+                    (category === 'education' && (lowerMessage.includes('teaching') || lowerMessage.includes('training')))) {
+                    
+                    foundCareers = foundCareers.concat(careerDatabase[category]);
+                }
+            });
+
+            if (foundCareers.length > 0) {
+                let response = `Great! Based on your interests, here are some career options that might be perfect for you:`;
+                
+                foundCareers.forEach((career, index) => {
+                    response += `
+                        <div class="career-card">
+                            <div class="career-title">${career.title}</div>
+                            <div class="career-details">
+                                <p><strong>Description:</strong> ${career.description}</p>
+                                <p><strong>Key Skills:</strong> ${career.skills.join(', ')}</p>
+                                <p><strong>Salary Range:</strong> ${career.salary}</p>
+                                <p><strong>Job Growth:</strong> ${career.growth}</p>
+                                <button class="toggle-roadmap" onclick="showRoadmap(${JSON.stringify(career).replace(/"/g, '&quot;')})">
+                                    View Career Roadmap 🗺️
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                addMessage(response, 'bot');
+            } else if (lowerMessage.includes('roadmap') || lowerMessage.includes('path')) {
+                addMessage("I'd be happy to create a roadmap for you! Please tell me which specific career you're interested in, or share your interests so I can suggest relevant careers first.", 'bot');
+            } else {
+                // General response for unrecognized interests
+                addMessage(`I understand you're interested in "${message}". While I don't have specific careers for that exact interest, I can help you explore related fields. Try clicking one of the quick buttons below, or tell me more about what aspects of ${message} excite you most!`, 'bot');
+            }
+        }
+
+        function showRoadmap(career) {
+            const roadmapPanel = document.getElementById('roadmapPanel');
+            const roadmapContent = document.getElementById('roadmapContent');
+            
+            let roadmapHTML = `
+                <h4>${career.title} - Career Roadmap</h4>
+                <p style="margin-bottom: 20px; color: #666;">${career.description}</p>
+                <div class="roadmap-container">
+            `;
+            
+            career.roadmap.forEach((step, index) => {
+                roadmapHTML += `
+                    <div class="roadmap-node" onclick="expandStep('${step}')">
+                        <strong>Step ${index + 1}:</strong> ${step}
+                        ${index < career.roadmap.length - 1 ? '<div class="roadmap-line"></div>' : ''}
+                    </div>
+                `;
+            });
+            
+            roadmapHTML += `
+                </div>
+                <button class="toggle-roadmap" onclick="hideRoadmap()" style="margin-top: 20px;">
+                    Close Roadmap ✖️
+                </button>
+            `;
+            
+            roadmapContent.innerHTML = roadmapHTML;
+            roadmapPanel.classList.add('active');
+            
+            addMessage(`I've generated a detailed career roadmap for ${career.title}! Check the roadmap panel on the right to see your step-by-step path to success. 🗺️`, 'bot');
+        }
+
+        function hideRoadmap() {
+            document.getElementById('roadmapPanel').classList.remove('active');
+        }
+
+        function expandStep(step) {
+            addMessage(`Let me provide more details about: "${step}". This step typically involves specific learning objectives, resources, and timeframes. Would you like me to elaborate on any particular aspect of this step?`, 'bot');
+        }
+
+        // Handle Enter key press
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize chat
+        window.onload = function() {
+            setTimeout(() => {
+                addMessage("I can help you with:<br>• Finding careers based on your interests<br>• Providing detailed career information<br>• Creating personalized career roadmaps<br>• Salary and growth prospects<br><br>What would you like to explore today?", 'bot');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
