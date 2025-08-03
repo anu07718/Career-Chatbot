@@ -138,7 +138,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- 🐛 [Issues](https://github.com/anu07718/Career-Chatbot)
+- 🐛 [Issues] https://github.com/anu07718/Career-Chatbot
 - 📧 Email: askotal077@gmail.com
 - ⭐ Star this repo if helpful!
 
