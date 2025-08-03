@@ -25,6 +25,27 @@ An AI-powered chatbot built with **Python Flask** that guides users in selecting
 
 ---
 
+## 💡 How It Works
+User enters their interest (e.g., “I love technology and design”).
+
+The chatbot processes the input and suggests careers like:
+
+UI/UX Designer
+
+Web Developer
+
+Data Scientist
+
+The user selects a career to view:
+
+Key skills
+
+Salary range
+
+Growth prospects
+
+Roadmap visualization
+
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
