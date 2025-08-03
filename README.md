@@ -6,7 +6,10 @@
 
 An intelligent career guidance chatbot powered by Python Flask that analyzes user interests and provides personalized career recommendations with step-by-step roadmaps.
 
-![Demo](https://via.placeholder.com/800x400/667eea/ffffff?text=Career+Chatbot+Demo)
+![WhatsApp Image 2025-08-03 at 23 15 26_b7dfea72](https://github.com/user-attachments/assets/2c3f9f0b-a897-493b-abbb-5037dbd87476)
+![WhatsApp Image 2025-08-03 at 23 15 47_68666e01](https://github.com/user-attachments/assets/418dc895-3247-4308-9c47-6e3d3d329294)
+![WhatsApp Image 2025-08-03 at 23 16 09_b9e93673](https://github.com/user-attachments/assets/26c3723e-a035-4187-9379-6528bb1e1363)
+
 
 ## ✨ Features
 
@@ -135,9 +138,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- 🐛 [Issues](https://github.com/yourusername/career-guidance-chatbot/issues)
-- 📧 Email: your.email@example.com
+- 🐛 [Issues](https://github.com/anu07718/Career-Chatbot)
+- 📧 Email: askotal077@gmail.com
 - ⭐ Star this repo if helpful!
 
 ---
-**Made with ❤️ using Python Flask**
+**Made By Anushka ❤️ **
